@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import Results from "./Results";
+import ConfigWorkers from "./configWorkers";
 const screenHeight = Dimensions.get("window").height;
 
 export default function Home() {
@@ -35,7 +36,10 @@ export default function Home() {
         >
           <ScrollView contentContainerStyle={styles.mainScreen}>
             <View style={styles.subview}>
-              <View style={styles.buttonView}>
+
+                <View style = {styles.buttonsView}>
+              
+              <View style={styles.buttonAdd}>
                 <TouchableOpacity
                   onPress={() => {
                     setShowImage(false);
@@ -45,6 +49,14 @@ export default function Home() {
                   <Text style={styles.addButton}>Añadir Trabajador</Text>
                 </TouchableOpacity>
               </View>
+
+              <View style = {styles.buttonConfig}>
+                   <TouchableOpacity onPress={() => setCurrentScreen("configWorkers")}>
+                        <Text style={styles.config}>⚙️</Text>
+                    </TouchableOpacity> 
+              </View>
+
+                </View>
 
               {workers.map((w, i) => {
                 return (
@@ -92,7 +104,6 @@ export default function Home() {
                 </View>
               )}
 
-              {console.log(totalTip)}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -105,6 +116,13 @@ export default function Home() {
           goBack={() => setCurrentScreen("Home")}
         />
       )}
+
+      {currentScreen === 'configWorkers' && (
+        <ConfigWorkers
+           goBack={() => setCurrentScreen("Home")} 
+        />
+      )}
+
     </>
   );
 }
@@ -115,7 +133,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#AFD8DC",
     alignItems: "center",
   },
-  buttonView: {
+  buttonsView:{
+    width:'90%',
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+    height:100,
+    marginTop:'20%',
+    marginBottom: "10%",
+    gap:20
+  },
+  buttonConfig:{
+    width: 55,
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "#1C514F",
+    borderColor: "#1C514F",
+    borderWidth: 2,
+  },
+  config:{
+    fontSize:26,
+    fontWeight:'bold',
+  },
+  buttonAdd: {
     width: 200,
     height: 55,
     justifyContent: "center",
@@ -124,8 +166,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#45996A",
     borderColor: "#1C514F",
     borderWidth: 2,
-    marginTop: "30%",
-    marginBottom: "10%",
   },
   addButton: {
     color: "#000",
