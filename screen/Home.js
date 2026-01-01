@@ -9,14 +9,19 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  
 } from "react-native";
+import ModalSelector from "react-native-modal-selector";
 import { useState, useEffect } from "react";
 import Results from "./Results";
 import ConfigWorkers from "./configWorkers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const screenHeight = Dimensions.get("window").height;
 
 export default function Home() {
   const [showImage, setShowImage] = useState(true);
+  const [getWorkers, setGetWorkers] = useState([])
   const [workers, setworkers] = useState([]);
   const [totalTip, setTotalTips] = useState(0);
   const [currentScreen, setCurrentScreen] = useState("Home");
@@ -27,8 +32,22 @@ export default function Home() {
     setworkers(updateWorkers);
   };
 
+  useEffect(() => {
+    const loadWorkers = async() =>{
+      const listWorkers = await AsyncStorage.getItem('@workers')
+
+      if(listWorkers){
+        setGetWorkers(JSON.parse(listWorkers))
+      }
+    }
+    loadWorkers()
+  },[getWorkers])
+
+  const pickerData = getWorkers.map((name, index) => ({key:index, label:name}))
+
   return (
     <>
+        
       {currentScreen === "Home" && (
         <KeyboardAvoidingView
           style={{ flex: 1, backgroundColor: "#AFD8DC" }}
@@ -44,6 +63,8 @@ export default function Home() {
                   onPress={() => {
                     setShowImage(false);
                     setworkers([...workers, { Trabajador: "", Horas: "" }]);
+                    
+                   
                   }}
                 >
                   <Text style={styles.addButton}>Añadir Trabajador</Text>
@@ -59,23 +80,62 @@ export default function Home() {
                 </View>
 
               {workers.map((w, i) => {
+                
                 return (
                   <View key={i} style={styles.workersView}>
-                    <Text style={styles.name}>Trabajador</Text>
-                    <TextInput
-                      style={styles.inputName}
-                      value={w.Trabajador}
-                      onChangeText={(text) =>
-                        handleChange(i, "Trabajador", text)
-                      }
-                    ></TextInput>
-
+                    
+                  
+                  <View style={styles.containerModal}>
+                  <ModalSelector
+                    data = {pickerData}
+                    initValue={w.Trabajador || "Selecciona un trabajador"}
+                    onChange={(option) => handleChange(i, "Trabajador", option.label)}
+                    style = {{flex:1}}
+                     selectStyle={{
+                              backgroundColor: "#ffffff",
+                              height: "100%",
+                              elevation: 2,
+                              alignItems:'center',
+                              justifyContent:'center',
+                              fontSize:20,
+                              width:175,
+                              color:'#000'
+                              
+                              
+                    }}
+                    selectTextStyle={{
+                              fontSize: 20,
+                              color: "#000",
+                              textAlign: "center",
+                              fontWeight:'bold',
+                              alignItems:'center'
+                  }}
+                    optionTextStyle={{
+                              fontSize: 20,
+                              color: "#000",
+                              paddingVertical: 10,
+                              fontWeight:'bold'
+                  }}
+                    optionContainerStyle={{
+                              backgroundColor: "#f7f7f7",
+                              borderRadius: 8,
+                              marginHorizontal: 10,
+                              fontSize: 20,
+                  }}
+                    initValueTextStyle={{color:'#000', fontSize:18, }}
+                    />
+                    </View>
+                     
+                     <View style={styles.containerHours}>
                     <Text style={styles.hours}>Horas</Text>
                     <TextInput
                       style={styles.inputHours}
                       value={w.Horas.toString()}
                       onChangeText={(text) => handleChange(i, "Horas", Number(text))}
                     ></TextInput>
+                    </View>
+
+
                   </View>
                 );
               })}
@@ -98,7 +158,22 @@ export default function Home() {
                     ></TextInput>
                   </View>
 
-                  <TouchableOpacity onPress={() => setCurrentScreen("Results")}>
+                  <TouchableOpacity onPress={() => {
+                      workers.map(w =>{
+                        if(w.Horas === "" || w.Trabajador === "" || totalTip === 0){
+                          Alert.alert(
+                            "Atención",
+                            "No pueden haber Horas Vacías",
+                            [{text: "Ok"}]
+                          )
+                          console.log(w)
+                        }else{
+                          setCurrentScreen("Results")
+                        }
+                      })
+                  }}>
+                    
+                    
                     <Text style={styles.calcularButton}>Calcular</Text>
                   </TouchableOpacity>
                 </View>
@@ -181,10 +256,10 @@ const styles = StyleSheet.create({
   },
   workersView: {
     width: "90%",
-    height: 50,
+    height: 70,
     backgroundColor: "#F55E3E",
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: 'space-between',
     alignItems: "center",
     margin: 10,
     borderRadius: 10,
@@ -192,17 +267,25 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 10,
   },
-  inputName: {
-    width: "30%",
-    backgroundColor: "#fafafaff",
-    borderRadius: 3,
-    textAlign: "center",
+  containerModal:{
+    justifyContent:'center',
+    alignItems:'center',
+    
+    
+  },
+  containerHours:{
+    flexDirection:'row',
+    width:'35%',
+    gap:10,
+    alignItems:'center',
   },
   inputHours: {
-    width: "10%",
+    width: 40,
+    height:45,
     backgroundColor: "#fafafaff",
     borderRadius: 3,
     textAlign: "center",
+    fontSize:18
   },
   name: {
     fontSize: 18,
@@ -216,7 +299,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "80%",
     padding: 15,
-    height: "10%",
+    height: "15%",
     justifyContent: "space-around",
     alignItems: "center",
     borderRadius: 10,
@@ -235,10 +318,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   tipInput: {
-    width: "40%",
+    width: "50%",
+    height:45,
     backgroundColor: "#fafafaff",
     borderRadius: 3,
     textAlign: "center",
+    fontSize:18
   },
   calcularInput: {
     gap: 10,
@@ -265,3 +350,12 @@ Verde petróleo oscuro
 Beige cálido / piel
 #EDB987
 */
+//setCurrentScreen("Results")
+
+/*if(workers.Horas === ""){
+                      Alert.alert(
+                            "Atención",
+                            "Hay Horas Vacias",
+                            [{text: "OK"}]
+                      )
+                    }*/
