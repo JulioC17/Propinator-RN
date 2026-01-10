@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import Results from "./Results";
 import ConfigWorkers from "./configWorkers";
 import SaveData from "./SaveData";
+import History from "./History";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const screenHeight = Dimensions.get("window").height;
 
@@ -73,7 +74,7 @@ export default function Home() {
               </View>
 
               <View style = {styles.viewData}>
-                   <TouchableOpacity onPress={() => setCurrentScreen("configWorkers")}>
+                   <TouchableOpacity onPress={() => setCurrentScreen("History")}>
                         <Text style={styles.config}>📋</Text>
                     </TouchableOpacity> 
               </View>
@@ -217,6 +218,12 @@ export default function Home() {
 
       {currentScreen === 'SaveData' && (
         <SaveData
+          goBack = {() =>  setCurrentScreen("Home")}
+        />
+      )}
+
+      {currentScreen === 'History' && (
+        <History
           goBack = {() =>  setCurrentScreen("Home")}
         />
       )}
