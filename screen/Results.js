@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -6,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import ModalSelector from "react-native-modal-selector"
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
@@ -44,6 +46,8 @@ export default function Results({ props, tips, goBack }) {
             );
           })}
         </View>
+
+
       </View>
     </ScrollView>
   );
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  
 });
 
 /*

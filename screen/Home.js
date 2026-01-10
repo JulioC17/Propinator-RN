@@ -16,6 +16,7 @@ import ModalSelector from "react-native-modal-selector";
 import { useState, useEffect } from "react";
 import Results from "./Results";
 import ConfigWorkers from "./configWorkers";
+import SaveData from "./SaveData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const screenHeight = Dimensions.get("window").height;
 
@@ -57,25 +58,40 @@ export default function Home() {
             <View style={styles.subview}>
 
                 <View style = {styles.buttonsView}>
+
+                  <View style = {styles.secondaryBtn}>
+              <View style = {styles.buttonConfig}>
+                   <TouchableOpacity onPress={() => setCurrentScreen("configWorkers")}>
+                        <Text style={styles.config}>⚙️</Text>
+                    </TouchableOpacity> 
+              </View>
+
+              <View style = {styles.saveData}>
+                   <TouchableOpacity onPress={() => setCurrentScreen("SaveData")}>
+                        <Text style={styles.config}>📊</Text>
+                    </TouchableOpacity> 
+              </View>
+
+              <View style = {styles.viewData}>
+                   <TouchableOpacity onPress={() => setCurrentScreen("configWorkers")}>
+                        <Text style={styles.config}>📋</Text>
+                    </TouchableOpacity> 
+              </View>
+              </View>
               
               <View style={styles.buttonAdd}>
+                
                 <TouchableOpacity
                   onPress={() => {
                     setShowImage(false);
                     setworkers([...workers, { Trabajador: "", Horas: "" }]);
-                    
-                   
                   }}
                 >
                   <Text style={styles.addButton}>Añadir Trabajador</Text>
                 </TouchableOpacity>
               </View>
 
-              <View style = {styles.buttonConfig}>
-                   <TouchableOpacity onPress={() => setCurrentScreen("configWorkers")}>
-                        <Text style={styles.config}>⚙️</Text>
-                    </TouchableOpacity> 
-              </View>
+              
 
                 </View>
 
@@ -159,18 +175,19 @@ export default function Home() {
                   </View>
 
                   <TouchableOpacity onPress={() => {
-                      workers.map(w =>{
-                        if(w.Horas === "" || w.Trabajador === "" || totalTip === 0){
-                          Alert.alert(
-                            "Atención",
-                            "No pueden haber Horas Vacías",
-                            [{text: "Ok"}]
-                          )
-                          console.log(w)
-                        }else{
-                          setCurrentScreen("Results")
-                        }
-                      })
+                    if(!totalTip || totalTip ===0){
+                      Alert.alert("Atención", "Introduce la Propina Total")
+                      return
+                    }
+
+                    const hasEmptyWorker = workers.some(w => w.Trabajador === "" || w.Horas === "")
+                    
+                    if(hasEmptyWorker) {
+                      Alert.alert("Atención", "Hay Trabajdores u Horas Vacíos")
+                      return
+                    }
+
+                    setCurrentScreen("Results")
                   }}>
                     
                     
@@ -198,6 +215,12 @@ export default function Home() {
         />
       )}
 
+      {currentScreen === 'SaveData' && (
+        <SaveData
+          goBack = {() =>  setCurrentScreen("Home")}
+        />
+      )}
+
     </>
   );
 }
@@ -210,7 +233,7 @@ const styles = StyleSheet.create({
   },
   buttonsView:{
     width:'90%',
-    flexDirection:'row',
+    flexDirection:'columns',
     justifyContent:'center',
     alignItems:'center',
     height:100,
@@ -218,13 +241,37 @@ const styles = StyleSheet.create({
     marginBottom: "10%",
     gap:20
   },
+  secondaryBtn:{
+    flexDirection:'row',
+    gap:15
+  },
   buttonConfig:{
     width: 55,
     height: 55,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    backgroundColor: "#1C514F",
+    backgroundColor: "#45996A",
+    borderColor: "#1C514F",
+    borderWidth: 2,
+  },
+  saveData:{
+    width: 55,
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "#45996A",
+    borderColor: "#1C514F",
+    borderWidth: 2,
+  },
+  viewData:{
+    width: 55,
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "#45996A ",
     borderColor: "#1C514F",
     borderWidth: 2,
   },
@@ -352,10 +399,3 @@ Beige cálido / piel
 */
 //setCurrentScreen("Results")
 
-/*if(workers.Horas === ""){
-                      Alert.alert(
-                            "Atención",
-                            "Hay Horas Vacias",
-                            [{text: "OK"}]
-                      )
-                    }*/
