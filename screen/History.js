@@ -18,10 +18,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-export default function History ({goBack}) {
+export default function History ({goBack, sendToHome}) {
     const [period, setPeriod] = useState([{año:"", mes:""}])
     const [history, setHistory] = useState([])
     const [visibleHistory, setVisibleHistory] = useState([])
+    const [visibleBtn, setVisibleBtn] = useState(false)
 
     useEffect(() => {
         const loadHistory = async () => {
@@ -41,6 +42,7 @@ export default function History ({goBack}) {
             if(history[w.año] && history[w.año][w.mes]){
                 Object.entries(history[w.año][w.mes]).forEach(([worker, hours]) => {
                     temp[worker] = (temp[worker] || 0) + hours
+                    setVisibleBtn(true)
                 })
             }
         })
@@ -128,7 +130,7 @@ export default function History ({goBack}) {
                         {Object.entries(visibleHistory).length > 0 ? (
                             Object.entries(visibleHistory).map(([w, h]) => {
                                return (
-                                <View style = {styles.listView}>
+                                <View style = {styles.listView} key ={w}>
                                <Text key = {w} style = {styles.worker}>{w}</Text>
                                <Text key = {h} style = {styles.worker}>{h} Horas</Text>
                                </View>
@@ -138,6 +140,20 @@ export default function History ({goBack}) {
                             <Text key = {1} style = {styles.error}>No hay fechas seleccionadas</Text>
                         )}
                     </View>
+                    
+                    {visibleBtn === true && (
+                        <View style={styles.calculateBtnView}>
+                            <TouchableOpacity style={styles.calculateBtn} onPress={() =>{
+                                const newWorkers = Object.entries(visibleHistory).map(([w, h]) => ({
+                                    Trabajador:w,
+                                    Horas:h
+                                }))
+                                sendToHome(newWorkers)
+                            }}>
+                                <Text style={styles.calculateBtnText}>Calcular</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
 
                     
             
@@ -213,6 +229,30 @@ listView:{
     margin:5,
     borderRadius:10,
     padding:10
+},error:{
+    fontSize:18,
+    padding:15,
+    margin:10,
+    borderColor:'#000',
+    backgroundColor:'#BA4435',
+    borderWidth:2,
+    borderRadius:10,
+    color:'#AFD8DC',
+    fontWeight:'bold'
+},calculateBtnView:{
+    height:55,
+    width: 130,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "#45996A",
+    borderColor: "#1C514F",
+    borderWidth: 2,
+    marginTop: "5%",
+    marginLeft: "1%",
+},calculateBtnText:{
+    fontSize:18,
+    fontWeight:'bold'
 }
   
 })

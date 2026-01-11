@@ -18,6 +18,7 @@ import Results from "./Results";
 import ConfigWorkers from "./configWorkers";
 import SaveData from "./SaveData";
 import History from "./History";
+import Help from "./Info";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const screenHeight = Dimensions.get("window").height;
 
@@ -63,19 +64,24 @@ export default function Home() {
                   <View style = {styles.secondaryBtn}>
               <View style = {styles.buttonConfig}>
                    <TouchableOpacity onPress={() => setCurrentScreen("configWorkers")}>
-                        <Text style={styles.config}>⚙️</Text>
+                        <Text style={styles.config}>Ajustes</Text>
                     </TouchableOpacity> 
               </View>
 
               <View style = {styles.saveData}>
                    <TouchableOpacity onPress={() => setCurrentScreen("SaveData")}>
-                        <Text style={styles.config}>📊</Text>
+                        <Text style={styles.config}>Registro</Text>
                     </TouchableOpacity> 
               </View>
 
               <View style = {styles.viewData}>
                    <TouchableOpacity onPress={() => setCurrentScreen("History")}>
-                        <Text style={styles.config}>📋</Text>
+                        <Text style={styles.config}>Datos</Text>
+                    </TouchableOpacity> 
+              </View>
+              <View style = {styles.helpBtn}>
+                   <TouchableOpacity onPress={() => setCurrentScreen("Help")}>
+                        <Text style={styles.config}>Ayuda</Text>
                     </TouchableOpacity> 
               </View>
               </View>
@@ -222,9 +228,20 @@ export default function Home() {
         />
       )}
 
+      {currentScreen === 'Help' && (
+        <Help
+          goBack = {() =>  setCurrentScreen("Home")}
+        />
+      )}
+
       {currentScreen === 'History' && (
         <History
           goBack = {() =>  setCurrentScreen("Home")}
+          sendToHome = {(newWorkers) => {
+            setworkers(newWorkers)
+            setCurrentScreen("Home")
+            setShowImage(false)
+          }}
         />
       )}
 
@@ -243,17 +260,18 @@ const styles = StyleSheet.create({
     flexDirection:'columns',
     justifyContent:'center',
     alignItems:'center',
-    height:100,
+    height:140,
     marginTop:'20%',
     marginBottom: "10%",
-    gap:20
+    gap:20,
+
   },
   secondaryBtn:{
     flexDirection:'row',
     gap:15
   },
   buttonConfig:{
-    width: 55,
+    width: 80,
     height: 55,
     justifyContent: "center",
     alignItems: "center",
@@ -263,7 +281,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   saveData:{
-    width: 55,
+    width: 80,
     height: 55,
     justifyContent: "center",
     alignItems: "center",
@@ -273,17 +291,17 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   viewData:{
-    width: 55,
+    width: 80,
     height: 55,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    backgroundColor: "#45996A ",
     borderColor: "#1C514F",
     borderWidth: 2,
+    backgroundColor:'#45996A'
   },
   config:{
-    fontSize:26,
+    fontSize:16,
     fontWeight:'bold',
   },
   buttonAdd: {
@@ -296,6 +314,16 @@ const styles = StyleSheet.create({
     borderColor: "#1C514F",
     borderWidth: 2,
   },
+  helpBtn:{
+   width: 80,
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    borderColor: "#BA4435",
+    borderWidth: 2,
+    backgroundColor:'#F55E3E'
+  },
   addButton: {
     color: "#000",
     fontSize: 20,
@@ -306,7 +334,7 @@ const styles = StyleSheet.create({
     height: 450,
   },
   imageView: {
-    marginTop: 100,
+    marginTop: 30,
   },
   workersView: {
     width: "90%",
