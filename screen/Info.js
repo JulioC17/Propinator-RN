@@ -77,7 +77,8 @@ generalView:{
     minHeight: screenHeight,
     backgroundColor: "#AFD8DC",
     alignItems: "center",
-    padding:20
+    padding:20,
+    paddingBottom:100
 },
  goBackBtn:{
     height: 55,

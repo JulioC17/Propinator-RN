@@ -35,6 +35,11 @@ export default function Home() {
     setworkers(updateWorkers);
   };
 
+   const removeItem = (array,index) =>{
+    const itemTrash = array.filter((w,i,a) => a[i] != a[index])
+    setworkers(itemTrash)
+  }
+
   useEffect(() => {
     const loadWorkers = async() =>{
       const listWorkers = await AsyncStorage.getItem('@workers')
@@ -47,6 +52,7 @@ export default function Home() {
   },[getWorkers])
 
   const pickerData = getWorkers.map((name, index) => ({key:index, label:name}))
+  const pickerDataSafe = pickerData.length > 0 ? pickerData : [{label:"No hay trabajadores", value:null, key: 1}]
 
   return (
     <>
@@ -56,7 +62,7 @@ export default function Home() {
           style={{ flex: 1, backgroundColor: "#AFD8DC" }}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <ScrollView contentContainerStyle={styles.mainScreen}>
+          <ScrollView contentContainerStyle={styles.mainScreen} keyboardShouldPersistTaps="handled">
             <View style={styles.subview}>
 
                 <View style = {styles.buttonsView}>
@@ -110,18 +116,18 @@ export default function Home() {
                   
                   <View style={styles.containerModal}>
                   <ModalSelector
-                    data = {pickerData}
-                    initValue={w.Trabajador || "Selecciona un trabajador"}
+                    data = {pickerDataSafe}
+                    initValue={w.Trabajador || "Trabajador"}
                     onChange={(option) => handleChange(i, "Trabajador", option.label)}
                     style = {{flex:1}}
                      selectStyle={{
                               backgroundColor: "#ffffff",
-                              height: "100%",
+                              height: 45,
                               elevation: 2,
                               alignItems:'center',
                               justifyContent:'center',
                               fontSize:20,
-                              width:175,
+                              width:120,
                               color:'#000'
                               
                               
@@ -144,7 +150,7 @@ export default function Home() {
                               borderRadius: 8,
                               marginHorizontal: 10,
                               fontSize: 20,
-                  }}
+                            }}
                     initValueTextStyle={{color:'#000', fontSize:18, }}
                     />
                     </View>
@@ -157,6 +163,13 @@ export default function Home() {
                       onChangeText={(text) => handleChange(i, "Horas", Number(text))}
                     ></TextInput>
                     </View>
+
+                    <TouchableOpacity
+                      style={styles.removeItem}
+                      onPress={() => {removeItem(workers, i)}}
+                    >
+                    <Text style={styles.addButton}>❌</Text>
+                  </TouchableOpacity>
 
 
                   </View>
@@ -416,6 +429,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
   },
+  mainScreen:{
+    paddingBottom:150
+  },
+  removeItem:{
+    borderWidth:1,
+    borderColorL:"#000",
+    padding:1,
+    backgroundColor:"#ebebeb",
+    borderRadius:5,
+    height:35,
+    width:35,
+    justifyContent:"center",
+    alignItems:"center"
+  }
 });
 
 /*

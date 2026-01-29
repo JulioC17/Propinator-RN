@@ -63,7 +63,6 @@ export default function ConfigWorkers ({goBack}) {
 
         <KeyboardAvoidingView
             behavior = {Platform.OS === 'ios' ? 'padding' : 'height'}
-            flex = {{flex:1}}
             style = {styles.keyboardOut}
         >
             <ScrollView style = {styles.generaScrolllView}>
@@ -88,6 +87,7 @@ export default function ConfigWorkers ({goBack}) {
                         <TextInput
                             style = {styles.workerInput}
                             placeholder="Agrega un trabajador"
+                            placeholderTextColor="#888"
                             value = {workerName}
                             onChangeText={text => setWorkerName(text) }
                         ></TextInput>
@@ -170,16 +170,16 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     buttonsView:{
-        width:'90%',
-        height:'10%',
+        width:350,
+        height:100,
         flexDirection:'row',
-        marginTop:'20%',
+        marginTop:50,
         justifyContent:'space-around',
         alignItems:'center'
     },
     buttongoBack:{
-    height: "60%",
-    width: "40%",
+    height: 45,
+    width: 130,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     },
     buttonAdd:{
-        height: "60%",
-    width: "40%",
+    height: 45,
+    width: 130,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -202,15 +202,19 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     inputView:{
-        width:'50%',
+        width:250,
     },
     workerInput:{
         backgroundColor:'#fff',
         borderRadius:5,
-        height:30,
+        height:40,
         borderColor:'#818181ff',
         borderWidth:3,
-        textAlign:'center'
+        textAlign:'center',
+        color:"#000",
+        fontSize:16,
+        textAlignVertical:"center",
+
     },
     listView:{
         width:'100%',
@@ -263,10 +267,12 @@ const styles = StyleSheet.create({
     height:30
     },
     generaScrolllView:{
-        backgroundColor:'#AFD8DC'
+        backgroundColor:'#AFD8DC',
+        paddingBottom:150
     },
     keyboardOut:{
-        backgroundColor:'#AFD8DC'
+        backgroundColor:'#AFD8DC',
+        flex:1
     }
    
      

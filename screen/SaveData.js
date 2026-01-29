@@ -38,6 +38,11 @@ export default function SaveData ({goBack}) {
     loadWorkers()
   },[])
 
+  const removeItem = (array,index) =>{
+    const itemTrash = array.filter((w,i,a) => a[i] != a[index])
+    setworkers(itemTrash)
+  }
+
   
     const months = [
       {key:"01",label:"Enero" , value: "Enero"},
@@ -67,8 +72,11 @@ export default function SaveData ({goBack}) {
   })) 
 
   return (
-    <KeyboardAvoidingView>
-        <ScrollView>
+    <KeyboardAvoidingView
+        behavior = {Platform.OS === 'ios' ? 'padding' : 'height'}
+        style = {styles.keyboardOut}
+    >
+        <ScrollView style = {styles.generaScrolllView}>
             <View style={styles.generalView}>
                 <View style={styles.buttonView}>
                       <TouchableOpacity style={styles.goBackBtn} onPress={goBack}>
@@ -135,7 +143,7 @@ export default function SaveData ({goBack}) {
                                     }}
                                     
                                     initValueTextStyle={{color:'#000', fontSize:18, }}
-                                    selectStyle={{backgroundColor: "#ffffff", height: 45, elevation: 2, alignItems:'center', justifyContent:'center', fontSize:20, width:150, color:'#000'}}
+                                    selectStyle={{backgroundColor: "#ffffff", height: 45, elevation: 2, alignItems:'center', justifyContent:'center', fontSize:20, width:120, color:'#000'}}
                                     optionTextStyle={{fontSize: 20, color: "#000", paddingVertical: 10, fontWeight:'bold'}}
                                     optionContainerStyle={{backgroundColor: "#f7f7f7", borderRadius: 8, marginHorizontal: 10, fontSize: 20,}}
                                 />
@@ -153,6 +161,13 @@ export default function SaveData ({goBack}) {
                                     }}
                                 ></TextInput>
                                </View>
+
+                               <TouchableOpacity
+                                    style={styles.removeItem}
+                                    onPress={() => {removeItem(workers, i)}}
+                                >
+                                    <Text style={styles.addButton}>❌</Text>
+                                </TouchableOpacity>
 
                                
                                 </View>
@@ -233,9 +248,10 @@ const styles = StyleSheet.create({
     minHeight: screenHeight,
     backgroundColor: "#AFD8DC",
     alignItems: "center",
+    paddingBottom:150
   },
   modalsAndBtn:{
-    width:'90%',
+    width:200,
     justifyContent:'center',
     alignItems:'center',
     borderColor:'#000',
@@ -243,21 +259,21 @@ const styles = StyleSheet.create({
    },
 
   goBackBtn:{
-    height: "60%",
-    width: "40%",
+    height: 45,
+    width: 130,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
     backgroundColor: "#45996A",
     borderColor: "#1C514F",
     borderWidth: 2,
-    marginTop: "5%",
-    marginLeft: "1%",
+    marginTop: 10,
+    marginLeft: 0,
 },buttonView:{
-    width: "90%",
-    height: "10%",
-    marginTop: "10%",
-    marginBottom: "5%",
+    width: 300,
+    height: 100,
+    marginTop: 75,
+    marginBottom: 20,
 },
 textBtn: {
     fontSize: 18,
@@ -286,7 +302,9 @@ textBtn: {
     justifyContent:'space-between',
     padding:10,
     borderRadius:10,
-    backgroundColor:'#F55E3E'
+    backgroundColor:'#F55E3E',
+    alignItems:"center"
+
 },
 input:{
     backgroundColor:'#fff',
@@ -324,6 +342,30 @@ saveDataText:{
     color: "#000",
     fontSize: 20,
     fontWeight: "bold",
-}
+},
+generaScrolllView:{
+    backgroundColor:'#AFD8DC',
+    paddingBottom:150
+},
+keyboardOut:{
+    backgroundColor:'#AFD8DC',
+    flex:1
+},
+addButton: {
+    color: "#000",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  removeItem:{
+    borderWidth:1,
+    borderColorL:"#000",
+    padding:1,
+    backgroundColor:"#ebebeb",
+    borderRadius:5,
+    height:35,
+    width:35,
+    justifyContent:"center",
+    alignItems:"center"
+  }
 
 })

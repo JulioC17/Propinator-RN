@@ -72,8 +72,11 @@ export default function History ({goBack, sendToHome}) {
   }
 
     return(
-        <KeyboardAvoidingView>
-        <ScrollView>
+        <KeyboardAvoidingView
+        behavior = {Platform.OS === 'ios' ? 'padding' : 'height'}
+        style = {styles.keyboardOut}
+        >
+        <ScrollView style = {styles.keyboardScroll} keyboardShouldPersistTaps="handled">
             <View style={styles.generalView}>
                 <View style={styles.buttonView}>
                     <TouchableOpacity style={styles.goBackBtn} onPress={goBack}>
@@ -168,10 +171,11 @@ const styles = StyleSheet.create({
     minHeight: screenHeight,
     backgroundColor: "#AFD8DC",
     alignItems: "center",
+    paddingBottom:150
   },
     goBackBtn:{
-    height: "60%",
-    width: "40%",
+    height: 55,
+    width: 170,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -181,27 +185,28 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     marginLeft: "1%",
 },buttonView:{
-    width: "90%",
-    height: "10%",
-    marginTop: "10%",
-    marginBottom: "5%",
-    flexDirection:'row'
+    width:350,
+    height:100,
+    flexDirection:'row',
+    marginTop:50,
+    justifyContent:'space-around',
+    alignItems:'center'
 },
 textBtn: {
     fontSize: 18,
     fontWeight: "bold",
   },
   addPeriod:{
- height: "60%",
-    width: "57%",
+ height: 55,
+    width: 170,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
     backgroundColor: "#45996A",
     borderColor: "#1C514F",
     borderWidth: 2,
-    marginTop: "5%",
-    marginLeft: "1%",
+    marginTop: 20,
+    marginLeft: 0,
   },
     modalsContainer:{
     flexDirection:'row',
@@ -253,6 +258,12 @@ listView:{
 },calculateBtnText:{
     fontSize:18,
     fontWeight:'bold'
+},
+keyboardOut:{
+    flex:1
+},
+keyboardScroll:{
+    paddingBottom:40
 }
   
 })
